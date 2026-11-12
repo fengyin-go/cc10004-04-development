@@ -33,3 +33,77 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .link { border: none; background: none; color: var(--brand); cursor: pointer; padding: 0; }
 .page-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .error-text { color: #b42318; }
+
+/* ---------------- 聚合试算器 ---------------- */
+.workspace { display: flex; gap: 14px; align-items: flex-start; }
+.plan-list { width: 230px; flex: 0 0 230px; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.plan-list h3 { margin: 2px 0 8px; font-size: 14px; }
+.plan-item { display: block; width: 100%; text-align: left; border: 1px solid transparent; background: #f8fafc; border-radius: 6px; padding: 8px; margin-bottom: 6px; cursor: pointer; }
+.plan-item.active { border-color: var(--brand); background: #eef4ff; }
+.plan-code { display: block; font-weight: 600; font-size: 13px; }
+.plan-meta { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.plan-detail { flex: 1; min-width: 0; }
+.detail-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+.detail-head h3 { margin: 0 0 4px; font-size: 16px; }
+.detail-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+.card h4 { margin: 0 0 10px; font-size: 14px; }
+.card h5 { margin: 0 0 8px; font-size: 13px; }
+.bind-grid, .metric-row, .bind-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+.field-item { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); }
+.field-item select, .field-item input { min-width: 150px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; background: #fff; color: #1f2937; font-size: 12px; }
+.field-item.narrow select, .field-item.narrow input { min-width: 96px; }
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px; }
+.metric-card { border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: #fbfcfe; }
+.metric-card header { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
+.metric-card header select { padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; font-size: 12px; }
+.inline { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; }
+.policy-hint { margin: 8px 0 0; font-size: 12px; color: var(--muted); }
+.range-editor { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.range-row { display: flex; gap: 6px; }
+.range-row input { flex: 1; min-width: 0; padding: 4px 6px; border: 1px solid var(--border); border-radius: 5px; font-size: 12px; }
+.sample-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+.table-scroll { overflow-x: auto; }
+.data-table.compact th, .data-table.compact td { padding: 5px 7px; font-size: 12px; }
+.cell-input { width: 100%; min-width: 70px; padding: 3px 5px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; }
+.cell-input.narrow { min-width: 56px; }
+.version-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+.version-panel { min-width: 0; }
+.muted { color: var(--muted); font-size: 12px; }
+.link.danger { color: #b42318; }
+.banner { padding: 8px 10px; border-radius: 6px; font-size: 13px; margin: 0 0 10px; }
+.banner.error { background: #fef3f2; border: 1px solid #fecdca; color: #b42318; }
+.banner.notice { background: #ecfdf3; border: 1px solid #abefc6; color: #067647; }
+.case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 12px; }
+.case-card { border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.case-card header { display: flex; justify-content: space-between; align-items: center; }
+.case-desc { font-size: 12px; color: var(--muted); margin: 6px 0; }
+.case-metrics { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.trial-head { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.legend-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.legend { font-size: 11px; padding: 1px 7px; border-radius: 10px; border: 1px solid var(--border); }
+.legend.null-included { background: #fff7e6; border-color: #f7c948; }
+.legend.null-excluded { background: #f1f5f9; border-color: #cbd5e1; }
+.legend.measured { background: #ecfdf3; border-color: #abefc6; }
+.legend.invalid { background: #fef3f2; border-color: #fecdca; }
+.conflict-box { background: #fffaeb; border: 1px solid #fedf89; border-radius: 6px; padding: 8px 10px; margin-bottom: 8px; font-size: 12px; }
+.boundary-box { background: #eff8ff; border: 1px solid #b2ddff; border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 12px; }
+.conflict-box ul, .boundary-box ul { margin: 4px 0 0; padding-left: 18px; }
+.group-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 12px; }
+.group-card { border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.group-card header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.group-card header small { color: var(--muted); }
+.contribution-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { font-size: 11px; padding: 1px 6px; border-radius: 10px; background: #f1f5f9; border: 1px solid #cbd5e1; }
+.chip.null-included { background: #fff7e6; border-color: #f7c948; }
+.chip.null-excluded { background: #f8fafc; border-color: #cbd5e1; color: #64748b; }
+.chip.measured { background: #ecfdf3; border-color: #abefc6; }
+.chip.invalid { background: #fef3f2; border-color: #fecdca; color: #b42318; }
+.chip em { color: var(--muted); font-style: normal; }
+.null-trace { display: block; color: var(--muted); margin-top: 3px; }
+.unassigned-box { margin-top: 12px; font-size: 12px; }
+.unassigned-box strong { display: block; margin-bottom: 6px; }
+.ok-text { color: #067647; }
+.warn-text { color: #b54708; }
+.seal-grid { display: flex; gap: 18px; flex-wrap: wrap; margin: 10px 0; }
+.seal-grid > div { display: flex; flex-direction: column; gap: 2px; }

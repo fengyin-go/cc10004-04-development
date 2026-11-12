@@ -1,8 +1,13 @@
-"""可视化图表业务规则：状态流转、字段校验与筛选口径都收在这里。"""
+"""可视化图表业务规则：状态流转、字段校验与筛选口径都收在这里。
+
+图表消费聚合口径时只读发布版证据：这里不复制草稿、也不在发布新版时静默替换
+旧证据，升级必须显式确认；同一版本重复确认不会新开一轮生效。
+"""
 from __future__ import annotations
 
 from typing import Any
 
+from app.services.aggregate import service as AGGREGATE
 from app.store import store
 
 MODULE = "chart"
@@ -59,3 +64,22 @@ class ChartService:
         entry["pending"] = target != STATUS_ORDER[-1]
         entry["abnormal"] = action in NEGATIVE_ACTIONS
         return entry, f"图表配置已{action}"
+
+    # ------------------------------------------------------------ 聚合口径消费
+
+    def aggregate_evidence(self, chart_id: str) -> list[dict[str, Any]]:
+        """图表侧只展示绑定版本的封存试算证据；有新版也只提示可升级。"""
+        return AGGREGATE.list_bindings(chart_id=chart_id)
+
+    def bind_aggregate(
+        self, chart_id: str, plan_id: int, version: int | None = None
+    ) -> tuple[dict[str, Any] | None, str]:
+        return AGGREGATE.bind_chart(chart_id, plan_id, version)
+
+    def upgrade_aggregate(
+        self, chart_id: str, plan_id: int, version: int | None = None
+    ) -> tuple[dict[str, Any] | None, str]:
+        return AGGREGATE.upgrade_binding(chart_id, plan_id, version_number=version)
+
+    def unbind_aggregate(self, binding_id: int) -> tuple[dict[str, Any] | None, str]:
+        return AGGREGATE.unbind_chart(binding_id)

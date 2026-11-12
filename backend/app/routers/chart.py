@@ -4,8 +4,10 @@ from __future__ import annotations
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel
 
 from app.schemas import ActionResult, EntryPayload, PageResult
+from app.services.aggregate import service as aggregate_service
 from app.services.chart import ChartService
 
 router = APIRouter(prefix="/api/chart", tags=["可视化图表"])
@@ -14,6 +16,59 @@ service = ChartService()
 
 LIST_FIELDS = ["图表编号", "图表名称", "图表类型", "数据来源", "X轴字段", "Y轴字段", "配色方案", "刷新间隔秒"]
 STATUSES = ["草稿", "待发布", "已发布", "已下线"]
+
+
+class AggregateBindingPayload(BaseModel):
+    """图表引用聚合发布版：version 缺省取该方案当前生效版。"""
+
+    chart_id: str
+    plan_id: int
+    version: int | None = None
+
+
+class AggregateBindingRef(BaseModel):
+    binding_id: int
+
+
+@router.get("/aggregate/catalog", response_model=dict)
+def aggregate_catalog() -> dict[str, Any]:
+    """可选聚合口径：只返回发布版，草稿不可被图表引用。"""
+    return {"items": aggregate_service.published_catalog()}
+
+
+@router.get("/aggregate/evidence", response_model=dict)
+def aggregate_evidence(
+    chart_id: str = Query(description="图表编号，例如 CHAR-0003"),
+) -> dict[str, Any]:
+    """图表引用的聚合试算证据：绑定版本、空值与窗口条件、分组贡献与冲突数。"""
+    items = service.aggregate_evidence(chart_id)
+    return {"chart_id": chart_id, "items": items, "total": len(items)}
+
+
+@router.post("/aggregate/bind", response_model=ActionResult)
+def bind_aggregate(payload: AggregateBindingPayload) -> ActionResult:
+    """把图表绑定到聚合发布版；重复绑定同一版不新开一轮生效。"""
+    entry, message = service.bind_aggregate(payload.chart_id, payload.plan_id, payload.version)
+    if entry is None:
+        return ActionResult(ok=False, message=message)
+    return ActionResult(ok=True, message=message, entry=entry)
+
+
+@router.post("/aggregate/upgrade", response_model=ActionResult)
+def upgrade_aggregate(payload: AggregateBindingPayload) -> ActionResult:
+    """显式确认升级到新版；上一版证据转为历史保留，可继续追溯。"""
+    entry, message = service.upgrade_aggregate(payload.chart_id, payload.plan_id, payload.version)
+    if entry is None:
+        return ActionResult(ok=False, message=message)
+    return ActionResult(ok=True, message=message, entry=entry)
+
+
+@router.post("/aggregate/unbind", response_model=ActionResult)
+def unbind_aggregate(payload: AggregateBindingRef) -> ActionResult:
+    entry, message = service.unbind_aggregate(payload.binding_id)
+    if entry is None:
+        return ActionResult(ok=False, message=message)
+    return ActionResult(ok=True, message=message, entry=entry)
 
 
 @router.get("", response_model=PageResult[dict])

@@ -14,6 +14,8 @@ class Store:
         self._tables: dict[str, list[dict[str, Any]]] = {
             name: [dict(row) for row in rows] for name, rows in SEED_ROWS.items()
         }
+        # 图表对聚合发布版的引用存放在共享仓库里，跨模块共享同一份证据。
+        self.bindings: list[dict[str, Any]] = []
 
     def module_names(self) -> list[str]:
         return sorted(self._tables)

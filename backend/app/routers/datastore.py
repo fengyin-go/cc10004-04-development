@@ -6,6 +6,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 
 from app.schemas import ActionResult, EntryPayload, PageResult
+from app.fixtures import DATASET_CATALOG
 from app.services.datastore import DatastoreService
 
 router = APIRouter(prefix="/api/datastore", tags=["数据集管理"])
@@ -14,6 +15,25 @@ service = DatastoreService()
 
 LIST_FIELDS = ["数据集编号", "数据集名称", "来源表名", "字段列表", "更新策略", "数据采样比例", "生命周期天数", "缓存开关"]
 STATUSES = ["草稿", "待审核", "已生效", "已废弃"]
+
+
+@router.get("/catalog/fields", response_model=dict)
+def field_catalog() -> dict[str, Any]:
+    """字段身份目录：聚合方案按 field_id 绑定字段，显示名只是快照。
+
+    返回每个数据集的稳定字段身份与角色，供聚合试算器的下拉框使用。
+    """
+    return {
+        "items": [
+            {
+                "dataset_id": dataset_id,
+                "dataset_name": meta["dataset_name"],
+                "source_table": meta["source_table"],
+                "fields": [dict(field) for field in meta["fields"]],
+            }
+            for dataset_id, meta in DATASET_CATALOG.items()
+        ]
+    }
 
 
 @router.get("", response_model=PageResult[dict])
